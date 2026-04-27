@@ -14,10 +14,11 @@ function BillHistory() {
     setLoading(true);
     try {
       const data = await getBills();
-      setBills(data || []);
+      console.log('BillHistory loaded', data);
+      setBills(Array.isArray(data) ? data : (data?.value || []));
       setError("");
     } catch (err) {
-      setError("Failed to load bills");
+      setError(err?.response?.data?.message || "Failed to load bills");
       console.error(err);
     } finally {
       setLoading(false);
@@ -31,7 +32,7 @@ function BillHistory() {
       await deleteBill(id);
       loadBills();
     } catch (err) {
-      setError("Failed to delete bill");
+      setError(err?.response?.data?.message || "Failed to delete bill");
       console.error(err);
     }
   };
@@ -39,7 +40,12 @@ function BillHistory() {
   return (
     <div className="page">
       <div className="section-card">
-        <h2 className="section-title">📋 Bill History</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <h2 className="section-title">📋 Bill History</h2>
+          <button onClick={loadBills} className="btn btn--secondary" style={{ minWidth: 160 }}>
+            Refresh history
+          </button>
+        </div>
         {error && <div className="alert">{error}</div>}
 
         {loading ? (
@@ -61,9 +67,20 @@ function BillHistory() {
                 </div>
                 <div className="bill-details">
                   <p><b>Bill ID:</b> {b.id}</p>
-                  <p><b>Date:</b> {new Date(b.createdAt).toLocaleDateString()}</p>
+                  <p><b>Date:</b> {b.createdAt ? new Date(b.createdAt).toLocaleString() : 'Unknown'}</p>
                   <p><b>Total Amount:</b> <span className="billing-amount">Rs. {b.totalAmount}</span></p>
                 </div>
+                {b.items?.length > 0 && (
+                  <div className="bill-items">
+                    <h6>Items</h6>
+                    {b.items.map((item) => (
+                      <div key={item.id} className="bill-item-row">
+                        <span>{item.medicine?.name || item.medicineId} × {item.quantity}</span>
+                        <span>Rs. {Number(item.price).toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>

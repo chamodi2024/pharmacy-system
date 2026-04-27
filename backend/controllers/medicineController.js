@@ -10,7 +10,7 @@ const medicineSchema = Joi.object({
 exports.getMedicines = async (req, res) => {
   try {
     const medicines = await Medicine.findAll({
-      order: [['createdAt', 'DESC']]
+      order: [['id', 'DESC']]
     });
     res.json(medicines);
   } catch (error) {

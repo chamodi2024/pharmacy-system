@@ -34,13 +34,14 @@ exports.getBills = async (req, res) => {
 };
 
 exports.createBill = async (req, res) => {
-  const transaction = await Bill.sequelize.transaction();
+  let transaction;
 
   try {
     const { error } = billSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
 
     const { patientName, items, totalAmount } = req.body;
+    transaction = await Bill.sequelize.transaction();
 
     // Create bill
     const bill = await Bill.create({
@@ -88,7 +89,7 @@ exports.createBill = async (req, res) => {
       }
     });
   } catch (error) {
-    await transaction.rollback();
+    if (transaction) await transaction.rollback();
     console.error('Create bill error:', error);
     res.status(500).json({ message: 'Server error' });
   }

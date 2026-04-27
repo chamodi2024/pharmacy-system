@@ -11,8 +11,8 @@ BillItem.belongsTo(Bill, { foreignKey: 'billId' });
 BillItem.belongsTo(Medicine, { foreignKey: 'medicineId', as: 'medicine' });
 Medicine.hasMany(BillItem, { foreignKey: 'medicineId' });
 
-// Sync database
-sequelize.sync({ alter: true })
+// Sync database without altering existing tables on startup
+sequelize.sync()
   .then(() => {
     console.log('Database synchronized successfully.');
   })

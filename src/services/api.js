@@ -1,19 +1,54 @@
 import axios from "axios";
 
+const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: backendBaseUrl ? `${backendBaseUrl.replace(/\/$/, "")}/api` : "/api",
   headers: {
     "Content-Type": "application/json"
   }
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      console.error("API response error:", error.response.status, error.response.data);
+    } else if (error.request) {
+      console.error("API request made but no response:", error.request);
+    } else {
+      console.error("API setup error:", error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
+/* Load saved token */
+const storedToken = localStorage.getItem("pharmacy_token");
+
+if (storedToken) {
+  api.defaults.headers.common["Authorization"] =
+    `Bearer ${storedToken}`;
+}
+
+/* Set / Remove token */
 export const setAuthToken = (token) => {
   if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    localStorage.setItem("pharmacy_token", token);
+
+    api.defaults.headers.common["Authorization"] =
+      `Bearer ${token}`;
   } else {
+    localStorage.removeItem("pharmacy_token");
+
     delete api.defaults.headers.common["Authorization"];
   }
 };
+
+export const logout = () => setAuthToken(null);
+
+/* ===========================
+   MEDICINES
+=========================== */
 
 export const getMedicines = async () => {
   const response = await api.get("/medicines");
@@ -35,6 +70,10 @@ export const deleteMedicine = async (id) => {
   return response.data;
 };
 
+/* ===========================
+   BILLS
+=========================== */
+
 export const getBills = async () => {
   const response = await api.get("/bills");
   return response.data;
@@ -49,6 +88,10 @@ export const deleteBill = async (id) => {
   const response = await api.delete(`/bills/${id}`);
   return response.data;
 };
+
+/* ===========================
+   AUTH
+=========================== */
 
 export const login = async (credentials) => {
   const response = await api.post("/auth/login", credentials);

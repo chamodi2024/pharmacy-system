@@ -21,8 +21,8 @@ const Medicine = sequelize.define('Medicine', {
     defaultValue: 0
   }
 }, {
-  tableName: 'medicines',
-  timestamps: true
+  tableName: 'medicine',
+  timestamps: false
 });
 
 module.exports = Medicine;

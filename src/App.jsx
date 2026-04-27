@@ -1,22 +1,27 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+
+import Navbar from "./components/Navbar";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Medicines from "./pages/Medicines";
 import Billing from "./pages/Billing";
 import BillHistory from "./pages/BillHistory";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Cart from "./pages/Cart";
-import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/medicines" element={<Medicines />} />
         <Route path="/billing" element={<Billing />} />
         <Route path="/history" element={<BillHistory />} />

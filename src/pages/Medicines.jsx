@@ -8,116 +8,89 @@ export default function Medicines() {
 
   useEffect(() => {
     loadMedicines();
-    const savedCart = JSON.parse(localStorage.getItem("pharmacy_cart")) || [];
+
+    const savedCart =
+      JSON.parse(localStorage.getItem("pharmacy_cart")) || [];
+
     setCart(savedCart);
   }, []);
 
+  const [loading, setLoading] = useState(false);
+
   const loadMedicines = async () => {
+    setLoading(true);
     try {
       const medicines = await getMedicines();
-      setData(medicines);
+      setData(medicines || []);
       setError("");
     } catch (err) {
-      setError("Unable to load medicines from API. Showing placeholder items.");
-      setData([
-        { id: 1, name: "Paracetamol", price: 100, quantity: 25 },
-        { id: 2, name: "Aspirin", price: 150, quantity: 18 },
-        { id: 3, name: "Vitamin C", price: 200, quantity: 40 }
-      ]);
+      const message = err?.response?.data?.message || err?.message || "Unable to load medicines from API.";
+      setError(message);
+      console.error("Medicines load error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const addToCart = (medicine) => {
-    const updatedCart = [...cart, { ...medicine, quantity: 1 }];
+    let updatedCart = [...cart];
+
+    const index = updatedCart.findIndex(
+      (item) => item.id === medicine.id
+    );
+
+    if (index >= 0) {
+      updatedCart[index].quantity += 1;
+    } else {
+      updatedCart.push({
+        ...medicine,
+        quantity: 1
+      });
+    }
+
     setCart(updatedCart);
-    localStorage.setItem("pharmacy_cart", JSON.stringify(updatedCart));
+    localStorage.setItem(
+      "pharmacy_cart",
+      JSON.stringify(updatedCart)
+    );
   };
 
   return (
     <div className="page">
-      <div className="section-card">
-        <h2 className="section-title">Available Medicines</h2>
-        {error && <div className="error-message">{error}</div>}
+      <h1>Available Medicines</h1>
 
+      {error && <p className="error-message">{error}</p>}
+      {loading ? (
+        <p>Loading medicines...</p>
+      ) : (
         <div className="card-grid">
           {data.map((m) => (
-            <div key={m.id} className="product-card">
-              <h3>{m.name}</h3>
-              <p>Price: Rs. {Number(m.price).toFixed(2)}</p>
-              <p>Stock: {m.quantity ?? "N/A"}</p>
-              <button onClick={() => addToCart(m)} className="btn btn--primary">
-                Add to Cart
-              </button>
-            </div>
-          ))}
-        </div>
+          <div key={m.id} className="product-card">
+            <h3>{m.name}</h3>
+            <p>Price: Rs. {Number(m.price).toFixed(2)}</p>
+            <p>Stock: {m.quantity}</p>
 
-        <div className="section-card">
-          <h3>Cart Preview ({cart.length})</h3>
-          {cart.length === 0 ? (
-            <p>No items added yet.</p>
-          ) : (
-            <ul className="cart-list">
-              {cart.map((item, index) => (
-                <li key={`${item.id}-${index}`} className="cart-item">
-                  {item.name} x {item.quantity}
-                </li>
-              ))}
-            </ul>
-          )}
+            <button onClick={() => addToCart(m)}>
+              Add to Cart
+            </button>
+          </div>
+        ))}
         </div>
-      </div>
+      )}
+
+      <hr />
+
+      <h2>Cart ({cart.length})</h2>
+
+      {cart.length === 0 ? (
+        <p>No items in cart</p>
+      ) : (
+        cart.map((item) => (
+          <div key={item.id}>
+            {item.name} x {item.quantity}
+          </div>
+        ))
+      )}
     </div>
   );
 }
-
-const styles = {
-  page: {
-    padding: "24px",
-    maxWidth: "1100px",
-    margin: "0 auto"
-  },
-  error: {
-    padding: "12px",
-    marginBottom: "18px",
-    background: "#fdecea",
-    color: "#b71c1c",
-    borderRadius: "10px"
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-    gap: "20px"
-  },
-  card: {
-    border: "1px solid #e0e0e0",
-    borderRadius: "14px",
-    padding: "20px",
-    background: "white",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.04)"
-  },
-  button: {
-    marginTop: "12px",
-    padding: "10px 16px",
-    background: "#1976d2",
-    color: "white",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer"
-  },
-  cartPreview: {
-    marginTop: "30px",
-    padding: "20px",
-    background: "#f9fafb",
-    borderRadius: "14px"
-  },
-  cartList: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0
-  },
-  cartItem: {
-    padding: "10px 0",
-    borderBottom: "1px solid #e0e0e0"
-  }
-};
