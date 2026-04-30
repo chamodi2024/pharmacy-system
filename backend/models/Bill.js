@@ -9,15 +9,21 @@ const Bill = sequelize.define('Bill', {
   },
   patientName: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    field: 'patient_name'
   },
   totalAmount: {
     type: DataTypes.DECIMAL(10, 2),
-    allowNull: false
+    allowNull: false,
+    field: 'total_price'
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    field: 'created_at'
   }
 }, {
   tableName: 'bills',
-  timestamps: true
+  timestamps: false
 });
 
 module.exports = Bill;

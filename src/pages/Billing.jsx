@@ -117,7 +117,8 @@ function Billing() {
   return (
     <div className="page">
       <div className="section-card">
-        <h2 className="section-title">💳 Billing</h2>
+        <p className="eyebrow" style={{ color: "#0f766e" }}>Checkout</p>
+        <h2 className="section-title">Billing</h2>
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
@@ -167,8 +168,9 @@ function Billing() {
                 <button
                   onClick={() => handleRemoveMedicine(index)}
                   className="btn btn--danger billing-remove"
+                  aria-label="Remove medicine"
                 >
-                  ✕
+                  X
                 </button>
               )}
             </div>

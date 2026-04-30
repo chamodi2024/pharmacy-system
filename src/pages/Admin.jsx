@@ -64,7 +64,13 @@ export default function Admin() {
   return (
     <div className="page">
       <div className="section-card">
-        <h2 className="section-title">Admin Panel</h2>
+        <div className="page-header">
+          <div>
+            <p className="eyebrow" style={{ color: "#0f766e" }}>Inventory control</p>
+            <h2 className="section-title">Admin Panel</h2>
+            <p>Add, review, and remove medicine records from one tidy workspace.</p>
+          </div>
+        </div>
         {message && <div className="success-message">{message}</div>}
         <div className="form-stack">
           <input
@@ -92,7 +98,7 @@ export default function Admin() {
           </button>
         </div>
 
-        <div className="section-card" style={{ marginTop: 24 }}>
+        <div className="inventory-panel">
           <h3>Inventory</h3>
           {medicines.length === 0 ? (
             <p>No medicines found.</p>
@@ -115,61 +121,3 @@ export default function Admin() {
     </div>
   );
 }
-
-const styles = {
-  page: {
-    padding: "24px",
-    maxWidth: "1100px",
-    margin: "0 auto"
-  },
-  message: {
-    background: "#eef6ff",
-    color: "#1d4ed8",
-    padding: "14px",
-    borderRadius: "12px",
-    marginBottom: "20px"
-  },
-  form: {
-    display: "grid",
-    gap: "12px",
-    marginBottom: "30px"
-  },
-  input: {
-    padding: "14px",
-    borderRadius: "12px",
-    border: "1px solid #d1d5db"
-  },
-  button: {
-    padding: "14px",
-    background: "#1976d2",
-    color: "white",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontWeight: "600"
-  },
-  listSection: {
-    marginTop: "20px"
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: "18px"
-  },
-  card: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "14px",
-    border: "1px solid #e5e7eb",
-    boxShadow: "0 10px 24px rgba(0,0,0,0.04)"
-  },
-  deleteBtn: {
-    marginTop: "14px",
-    padding: "10px 16px",
-    background: "#ef4444",
-    color: "white",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer"
-  }
-};

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "../services/api";
+import { register, setAuthToken } from "../services/api";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -32,7 +32,14 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      await register({ username: trimmedUsername, email: trimmedEmail, password });
+      const result = await register({ username: trimmedUsername, email: trimmedEmail, password });
+      if (result?.token) {
+        setAuthToken(result.token);
+        setSuccess("Account created successfully. Redirecting...");
+        setTimeout(() => navigate("/dashboard"), 800);
+        return;
+      }
+
       setSuccess("Account created successfully. Redirecting to login...");
       setUsername("");
       setEmail("");
@@ -53,7 +60,15 @@ export default function Signup() {
   };
 
   return (
-    <div className="page">
+    <div className="page auth-page">
+      <section className="auth-photo">
+        <div>
+          <p className="eyebrow">New staff account</p>
+          <h1>Start with a clean workspace for pharmacy operations.</h1>
+          <p>Create an account and continue straight into the dashboard after registration.</p>
+        </div>
+      </section>
+
       <div className="form-card form-stack">
         <form className="form-stack" onSubmit={handleSubmit}>
           <h2>Create account</h2>

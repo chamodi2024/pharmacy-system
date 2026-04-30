@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { setAuthToken } from "../services/api";
 
 export default function Navbar() {
@@ -15,15 +15,15 @@ export default function Navbar() {
         <Link to="/">Pharmacy Pro</Link>
       </div>
       <div className="navbar__links">
-        <Link to="/" className="navbar__link">Home</Link>
-        <Link to="/medicines" className="navbar__link">Medicines</Link>
-        <Link to="/billing" className="navbar__link">Billing</Link>
-        <Link to="/history" className="navbar__link">Bill History</Link>
-        <Link to="/dashboard" className="navbar__link">Dashboard</Link>
-        <Link to="/admin" className="navbar__link">Admin</Link>
-        <Link to="/cart" className="navbar__link">Cart</Link>
-        <Link to="/signup" className="navbar__link">Sign Up</Link>
-        <Link to="/login" className="navbar__link">Login</Link>
+        <NavLink to="/" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Home</NavLink>
+        <NavLink to="/medicines" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Medicines</NavLink>
+        <NavLink to="/billing" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Billing</NavLink>
+        <NavLink to="/history" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Bill History</NavLink>
+        <NavLink to="/dashboard" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Dashboard</NavLink>
+        <NavLink to="/admin" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Admin</NavLink>
+        <NavLink to="/cart" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Cart</NavLink>
+        <NavLink to="/signup" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Sign Up</NavLink>
+        <NavLink to="/login" className={({ isActive }) => "navbar__link" + (isActive ? " active" : "")}>Login</NavLink>
         <button type="button" onClick={handleLogout} className="navbar__link">
           Logout
         </button>

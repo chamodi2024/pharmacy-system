@@ -46,7 +46,8 @@ exports.createBill = async (req, res) => {
     // Create bill
     const bill = await Bill.create({
       patientName,
-      totalAmount
+      totalAmount,
+      createdAt: new Date()
     }, { transaction });
 
     // Create bill items

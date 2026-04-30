@@ -41,7 +41,15 @@ export default function Login() {
   };
 
   return (
-    <div className="page">
+    <div className="page auth-page">
+      <section className="auth-photo">
+        <div>
+          <p className="eyebrow">Welcome back</p>
+          <h1>Keep the counter moving with less friction.</h1>
+          <p>Sign in to continue managing stock, billing, and patient purchases with a clearer daily workflow.</p>
+        </div>
+      </section>
+
       <div className="form-card form-stack">
         <form className="form-stack" onSubmit={handleSubmit}>
           <h2>Login</h2>

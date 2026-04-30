@@ -10,6 +10,7 @@ const BillItem = sequelize.define('BillItem', {
   billId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'bill_id',
     references: {
       model: 'bills',
       key: 'id'
@@ -18,8 +19,9 @@ const BillItem = sequelize.define('BillItem', {
   medicineId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'medicine_id',
     references: {
-      model: 'medicines',
+      model: 'medicine',
       key: 'id'
     }
   },
@@ -30,6 +32,14 @@ const BillItem = sequelize.define('BillItem', {
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    field: 'created_at'
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: 'updated_at'
   }
 }, {
   tableName: 'bill_items',

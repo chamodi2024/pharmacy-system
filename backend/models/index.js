@@ -11,8 +11,36 @@ BillItem.belongsTo(Bill, { foreignKey: 'billId' });
 BillItem.belongsTo(Medicine, { foreignKey: 'medicineId', as: 'medicine' });
 Medicine.hasMany(BillItem, { foreignKey: 'medicineId' });
 
+const ensureUserTableColumns = async () => {
+  const queryInterface = sequelize.getQueryInterface();
+  const table = await queryInterface.describeTable('users');
+
+  if (!table.email) {
+    await queryInterface.addColumn('users', 'email', {
+      type: sequelize.Sequelize.DataTypes.STRING,
+      allowNull: true,
+      unique: true
+    });
+  }
+
+  if (!table.createdAt) {
+    await queryInterface.addColumn('users', 'createdAt', {
+      type: sequelize.Sequelize.DataTypes.DATE,
+      allowNull: true
+    });
+  }
+
+  if (!table.updatedAt) {
+    await queryInterface.addColumn('users', 'updatedAt', {
+      type: sequelize.Sequelize.DataTypes.DATE,
+      allowNull: true
+    });
+  }
+};
+
 // Sync database without altering existing tables on startup
-sequelize.sync()
+ensureUserTableColumns()
+  .then(() => sequelize.sync())
   .then(() => {
     console.log('Database synchronized successfully.');
   })
